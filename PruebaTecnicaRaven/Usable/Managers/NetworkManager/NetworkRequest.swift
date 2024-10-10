@@ -18,6 +18,7 @@ struct NetworkRequest {
         // FORMAT: baseURL/version/path
         // EXAMPLE: https://myapi.com/api + /v2 + /getUsers
         enum Version: String {
+            case none
             case v1 = "v1"
         }
         let baseURL: String
@@ -27,7 +28,13 @@ struct NetworkRequest {
         func getComponents() -> URLComponents? {
             var components = URLComponents(string: baseURL)
             let previousPath = components?.path ?? ""
-            components?.path = previousPath + "/\(version.rawValue)/\(path)"
+            let path = switch version {
+            case .none:
+                previousPath + "/\(path)"
+            default:
+                previousPath + "/\(version.rawValue)/\(path)"
+            }
+            components?.path = path
             return components
         }
     }

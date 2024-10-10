@@ -20,5 +20,5 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView()
+    MainView(vm: .init(articlesService: ArticlesMockService()))
 }

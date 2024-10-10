@@ -13,4 +13,9 @@ import Observation
 final class MainViewModel: Sendable {
     var articles: [ArticleModel] = []
     var isLoading: Bool = true
+    @ObservationIgnored let articlesService: ArticlesServiceProtocol
+    
+    init(articlesService: ArticlesServiceProtocol = ArticlesService()) {
+        self.articlesService = articlesService
+    }
 }

@@ -39,4 +39,9 @@ struct NetworkResponse {
     let data: Data
     //    let cookies:
     //    let headers:
+    static let empty = Self(status: 0, time: 0, size: 0, data: Data())
+    static let status200 = Self(status: 200, time: 0, size: 0, data: Data())
+    static let status401 = Self(status: 401, time: 0, size: 0, data: Data())
+    static let status429 = Self(status: 429, time: 0, size: 0, data: Data())
+    static let status500 = Self(status: 500, time: 0, size: 0, data: Data())
 }

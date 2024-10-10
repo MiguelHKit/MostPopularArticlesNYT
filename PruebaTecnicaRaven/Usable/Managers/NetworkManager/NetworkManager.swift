@@ -6,16 +6,15 @@
 //
 
 import Foundation
-import Combine
 import OSLog
 
 actor NetworkManager {
     //GENERAL CONFIGURATION
     //    static nonisolated let IS_PRODUCTION: Bool = false
-    static nonisolated let BASE_URL: String   = "https://frontend-test-assignment-api.abz.agency/api"
+    static nonisolated let BASE_URL: String   = "https://api.nytimes.com/svc/mostpopular/v2"
     static nonisolated let printLogs: Bool = false
     private init() { }
-    
+    /// Main function to perform the request
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {
         //URL
         let url: URL = try {
@@ -70,16 +69,23 @@ actor NetworkManager {
             data: data
         )
     }
-    /// Make a request using a NetwortRequest and returning a Codable Model
+    /// Make a request using a NetwortRequest and returning a Codable Model and the Network Response within a tuple
+    /// - Parameter req: NetworkRequest
+    /// - Returns: Tuple of (Codable Model, NetworkRequest)
+    public static func request<T: Codable>(request req: NetworkRequest) async throws -> (T,status: Int) {
+        let response = try await NetworkManager.request(request: req)
+        //Decoding
+        let dataDecoded: T = try await Self.decode(data: response.data)
+        return (dataDecoded, status: response.status)
+    }
+    /// Make a request using a NetwortRequest and returning only the Codable Model
     /// - Parameter req: NetworkRequest
     /// - Returns: Codable Model
     public static func request<T: Codable>(request req: NetworkRequest) async throws -> T {
         let response = try await NetworkManager.request(request: req)
         //Decoding
-        let jsonDecoder = JSONDecoder()
-        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        guard let dataDecoded = try? jsonDecoder.decode(T.self, from: response.data) else { throw NetworkError.decodingError }
-        return dataDecoded
+        let dataDecoded: T = try await Self.decode(data: response.data)
+        return (dataDecoded)
     }
     /// Upload a multipartRequest using form data in order to send files,
     /// the header for multipart/formadata is already setted, no need to added
@@ -106,5 +112,11 @@ actor NetworkManager {
                 )
             )
         )
+    }
+    public static func decode<T: Codable>(data: Data) async throws -> T {
+        let jsonDecoder = JSONDecoder()
+        jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+        guard let dataDecoded = try? jsonDecoder.decode(T.self, from: data) else { throw NetworkError.decodingError }
+        return dataDecoded
     }
 }
