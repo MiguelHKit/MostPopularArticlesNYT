@@ -17,8 +17,8 @@ enum ArticleShareType: String {
 }
 
 protocol ArticlesServiceProtocol {
-    func getEmailedArticles(period: ArticlePeriod) async throws -> ViewedArticleResponse?
-    func getSharedArticles(period: ArticlePeriod) async throws -> ViewedArticleResponse?
-    func getSharedArticles(period: ArticlePeriod,shareType: ArticleShareType) async throws -> ViewedArticleResponse?
-    func getViewedArticles(period: ArticlePeriod) async throws -> ViewedArticleResponse?
+    func getEmailedArticles(period: ArticlePeriod) async throws -> GetArticleResponse?
+    func getSharedArticles(period: ArticlePeriod) async throws -> GetArticleResponse?
+    func getSharedArticles(period: ArticlePeriod,shareType: ArticleShareType) async throws -> GetArticleResponse?
+    func getViewedArticles(period: ArticlePeriod) async throws -> GetArticleResponse?
 }

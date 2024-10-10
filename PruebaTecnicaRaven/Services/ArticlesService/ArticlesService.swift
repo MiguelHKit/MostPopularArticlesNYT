@@ -11,7 +11,7 @@ import Foundation
 actor ArticlesService: ArticlesServiceProtocol {
     let mainURL: String = NetworkManager.BASE_URL
     let apiKey: String = ""
-    func getEmailedArticles(period: ArticlePeriod) async throws -> ViewedArticleResponse? {
+    func getEmailedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
         try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -28,7 +28,7 @@ actor ArticlesService: ArticlesServiceProtocol {
             )
         )
     }
-    func getSharedArticles(period: ArticlePeriod) async throws -> ViewedArticleResponse? {
+    func getSharedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
         try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -45,7 +45,7 @@ actor ArticlesService: ArticlesServiceProtocol {
             )
         )
     }
-    func getSharedArticles(period: ArticlePeriod, shareType: ArticleShareType) async throws -> ViewedArticleResponse? {
+    func getSharedArticles(period: ArticlePeriod, shareType: ArticleShareType) async throws -> GetArticleResponse? {
         try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -62,7 +62,7 @@ actor ArticlesService: ArticlesServiceProtocol {
             )
         )
     }
-    func getViewedArticles(period: ArticlePeriod) async throws -> ViewedArticleResponse? {
+    func getViewedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
         try await NetworkManager.request(
             request: .init(
                 url: .init(

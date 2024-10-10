@@ -15,15 +15,15 @@ struct FaultResponse: Codable {
     }
 }
 
-struct ViewedArticleResponse: Codable {
+struct GetArticleResponse: Codable {
     let status: String?
     let copyright: String?
     let num_results: Int?
-    let results: ViewedArticleItemResponse?
+    let results: GetArticleItemResponse?
     let fault: FaultResponse?
 }
 
-struct ViewedArticleItemResponse: Codable {
+struct GetArticleItemResponse: Codable {
     let uri: String?
     let url: String?
     let id, assetID: Int?
