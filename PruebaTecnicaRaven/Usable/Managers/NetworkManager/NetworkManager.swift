@@ -12,7 +12,7 @@ actor NetworkManager {
     //GENERAL CONFIGURATION
     //    static nonisolated let IS_PRODUCTION: Bool = false
     static nonisolated let BASE_URL: String   = "https://api.nytimes.com/svc/mostpopular/v2"
-    static nonisolated let printLogs: Bool = false
+    static nonisolated let printLogs: Bool = true
     private init() { }
     /// Main function to perform the request
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {

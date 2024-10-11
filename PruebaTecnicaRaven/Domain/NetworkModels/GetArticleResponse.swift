@@ -19,7 +19,7 @@ struct GetArticleResponse: Codable {
     let status: String?
     let copyright: String?
     let num_results: Int?
-    let results: GetArticleItemResponse?
+    let results: [GetArticleItemResponse]?
     let fault: FaultResponse?
 }
 
@@ -42,7 +42,7 @@ struct GetArticleItemResponse: Codable {
         let subtype: String?
         let caption: String?
         let copyright: String?
-        let approvedForSyndication: Bool?
+        let approvedForSyndication: Int?
         let mediaMetadata: [MediaMetadataResponse]?
     }
     struct MediaMetadataResponse: Codable {

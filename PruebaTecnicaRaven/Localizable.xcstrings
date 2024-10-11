@@ -1,7 +1,129 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "articles" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Articles"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Articulos"
+          }
+        }
+      }
+    },
+    "authorizationError" : {
 
+    },
+    "badResponse" : {
+
+    },
+    "byDay" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By day"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por día"
+          }
+        }
+      }
+    },
+    "byMonth" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By month"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por mes"
+          }
+        }
+      }
+    },
+    "byWeek" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "By Week"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "por semana"
+          }
+        }
+      }
+    },
+    "dataError" : {
+
+    },
+    "decodingError" : {
+
+    },
+    "encodingBodyError" : {
+
+    },
+    "generalError" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An error has occurred. Please try again later"
+          }
+        }
+      }
+    },
+    "generalErrorMessage" : {
+
+    },
+    "generalErrorTitle" : {
+
+    },
+    "invalidParameters" : {
+
+    },
+    "invalidResponse" : {
+
+    },
+    "invalidURL" : {
+
+    },
+    "localRequestError" : {
+
+    },
+    "noData" : {
+
+    },
+    "Sort by" : {
+
+    },
+    "urlDoesntExist" : {
+
+    },
+    "URLPathHasNoSlash" : {
+
+    },
+    "validationError" : {
+
+    }
   },
   "version" : "1.0"
 }

@@ -7,10 +7,17 @@
 
 import Foundation
 
-enum ArticlePeriod: Int {
-    case day = 1
-    case week = 7
-    case month = 30
+enum ArticlePeriod: Int, CaseIterable {
+    case aDay = 1
+    case aWeek = 7
+    case aMonth = 30
+    func getName() -> String {
+        switch self {
+        case .aDay: return String(localized: "byDay")
+        case .aWeek: return String(localized: "byWeek")
+        case .aMonth: return String(localized: "byMonth")
+        }
+    }
 }
 enum ArticleShareType: String {
     case facebook = "facebook"
