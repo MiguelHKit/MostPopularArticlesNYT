@@ -44,6 +44,14 @@ struct GetArticleItemResponse: Codable {
         let copyright: String?
         let approvedForSyndication: Int?
         let mediaMetadata: [MediaMetadataResponse]?
+        enum CodingKeys: String,CodingKey {
+            case type = "type"
+            case subtype = "subtype"
+            case caption = "caption"
+            case copyright = "copyright"
+            case approvedForSyndication = "approved_for_syndication"
+            case mediaMetadata = "media-metadata"
+        }
     }
     struct MediaMetadataResponse: Codable {
         let url: String?

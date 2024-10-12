@@ -8,10 +8,10 @@
 import Foundation
 
 extension Date {
-    func dateFormatted(withStyle style: DateFormatter.Style = .medium) -> String {
+    func dateFormatted(withStyle style: DateFormatter.Style = .medium, timeStyle: DateFormatter.Style = .none) -> String {
         let formatter = DateFormatter()
         formatter.dateStyle = style
-        formatter.timeStyle = .none
+        formatter.timeStyle = timeStyle
         formatter.locale = Locale.current
         return formatter.string(from: self)
     }

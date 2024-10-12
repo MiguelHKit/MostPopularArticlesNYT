@@ -7,8 +7,12 @@
 
 import Foundation
 
-//extension Optional where Wrapped: Collection {
-//    func wrapped() -> [Wrapped.Element] {
-//        return self?.compactMap { $0 } ?? []
-//    }
-//}
+extension Optional where Wrapped: Sequence {
+    func removeOptionals() -> [Wrapped.Element] {
+        return self?.compactMap { $0 } ?? []
+    }
+}
+
+extension Optional where Wrapped == String {
+    var unwrapped: String { self ?? "" }
+}

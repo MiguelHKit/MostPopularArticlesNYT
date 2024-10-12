@@ -39,11 +39,14 @@ struct LoadingModifier: ViewModifier {
 }
 
 extension View {
-    func loading(isLoading: Binding<Bool>, isOpaque: Bool = true) -> some View {
+    func loading(isLoading: Binding<Bool>, isOpaque: Bool = false) -> some View {
         self.modifier(LoadingModifier(isLoading: isLoading, isOpaque: isOpaque))
     }
 }
 
 #Preview {
-    LoadingView(isOpaque: true)
+    ZStack {
+        Color.red
+        LoadingView(isOpaque: false)
+    }
 }

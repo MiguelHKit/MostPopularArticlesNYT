@@ -80,8 +80,10 @@
     "encodingBodyError" : {
 
     },
-    "generalError" : {
-      "extractionState" : "stale",
+    "generalErrorMessage" : {
+
+    },
+    "generalErrorTitle" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -90,12 +92,6 @@
           }
         }
       }
-    },
-    "generalErrorMessage" : {
-
-    },
-    "generalErrorTitle" : {
-
     },
     "invalidParameters" : {
 

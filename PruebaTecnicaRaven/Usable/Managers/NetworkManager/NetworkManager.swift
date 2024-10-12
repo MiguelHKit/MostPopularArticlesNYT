@@ -120,3 +120,16 @@ actor NetworkManager {
         return dataDecoded
     }
 }
+
+struct CustomCodingKey: CodingKey {
+    var stringValue: String
+    var intValue: Int? { return nil }
+    
+    init?(stringValue: String) {
+        self.stringValue = stringValue
+    }
+    
+    init?(intValue: Int) {
+        return nil
+    }
+}

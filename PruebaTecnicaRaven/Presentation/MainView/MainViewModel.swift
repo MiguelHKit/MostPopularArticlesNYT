@@ -35,44 +35,9 @@ final class MainViewModel: Sendable {
                 articlesResponse.status?.uppercased() == "OK"
             else { throw NetworkError.noData }
             guard articlesResponse.fault == nil else { throw NetworkError.custom(message: articlesResponse.fault?.faultstring ?? NetworkError.generalErrorMessage) }
-            var articles: [ArticleModel] = articlesResponse.results?.compactMap {
-                ArticleModel(
-                    responseId: String($0.id ?? 0),
-                    url: $0.url ?? "",
-                    adxKeywords: $0.adxKeywords?.components(separatedBy: ";") ?? [],
-                    subsection: $0.subsection ?? "",
-                    section: $0.section ?? "",
-                    nytdsection: $0.nytdsection ?? "",
-                    byline: $0.byline ?? "",
-                    title: $0.title ?? "",
-                    abstract: $0.abstract ?? "",
-                    publishedDate: ($0.publishedDate ?? "").toDate(format: .yyyyMMddHHHyphen),
-                    updatedDate: ($0.updated ?? "").toDate(format: .yyyyMMddHHmmssHyphen),
-                    descriptionFacets: $0.desFacet?.compactMap { $0
-                    } ?? [],
-                    organizationFacets: $0.orgFacet?.compactMap { $0 } ?? [],
-                    personFacets: $0.perFacet?.compactMap { $0 } ?? [],
-                    geographycFacets: $0.geoFacet?.compactMap { $0 } ?? [],
-                    media: $0.media?.compactMap(
-                        { mediaTiem in
-                            ArticleModel.Media(
-                                caption: mediaTiem.caption ?? "",
-                                copyright: mediaTiem.copyright ?? "",
-                                approvedForSyndication: mediaTiem.approvedForSyndication == 1 ? true : false,
-                                images: mediaTiem.mediaMetadata?.compactMap(
-                                    { metaDataItem in
-                                        ArticleModel.Media.MediaImage(
-                                            url: metaDataItem.url ?? "",
-                                            format: (metaDataItem.format ?? "").mapfromNYTAspectRatio(),
-                                            width: metaDataItem.width ?? 0,
-                                            height: metaDataItem.width ?? 0
-                                        )
-                                }) ?? []
-                            )
-                    }) ?? []
-                )
-            } ?? []
+            var articles: [ArticleModel] = .Element.mapFromService(articlesResponse)
             articles.sort { $0.updatedDate > $1.updatedDate }
+            print("\(articles)")
             await MainActor.run { [articles] in
                 self.articles = articles
             }
@@ -103,6 +68,7 @@ final class MainViewModel: Sendable {
     }
     @Sendable
     nonisolated func refreshArticles() async {
+        try? await Task.sleep(for: .seconds(1))
         await self.getArticles()
     }
 }
