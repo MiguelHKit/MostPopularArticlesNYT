@@ -20,6 +20,7 @@ struct NetworkRequest {
         enum Version: String {
             case none
             case v1 = "v1"
+            case v2 = "v2"
         }
         let baseURL: String
         let version: Self.Version

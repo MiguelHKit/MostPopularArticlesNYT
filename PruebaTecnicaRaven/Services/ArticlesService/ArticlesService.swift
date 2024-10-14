@@ -10,13 +10,14 @@ import Foundation
 // MARK: PROD Service
 actor ArticlesService: ArticlesServiceProtocol {
     let mainURL: String = NetworkManager.BASE_URL
-    let apiKey: String = ""
+    let keychanAccount = "com.pruebaRaven.apikey"
     func getEmailedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
-        try await NetworkManager.request(
+        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        return try await NetworkManager.request(
             request: .init(
                 url: .init(
                     baseURL: mainURL,
-                    version: .v1,
+                    version: .v2,
                     path: "emailed/\(period.rawValue).json"
                 ),
                 method: .get,
@@ -29,11 +30,12 @@ actor ArticlesService: ArticlesServiceProtocol {
         )
     }
     func getSharedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
-        try await NetworkManager.request(
+        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        return try await NetworkManager.request(
             request: .init(
                 url: .init(
                     baseURL: mainURL,
-                    version: .v1,
+                    version: .v2,
                     path: "shared/\(period.rawValue).json"
                 ),
                 method: .get,
@@ -46,11 +48,12 @@ actor ArticlesService: ArticlesServiceProtocol {
         )
     }
     func getSharedArticles(period: ArticlePeriod, shareType: ArticleShareType) async throws -> GetArticleResponse? {
-        try await NetworkManager.request(
+        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        return try await NetworkManager.request(
             request: .init(
                 url: .init(
                     baseURL: mainURL,
-                    version: .v1,
+                    version: .v2,
                     path: "shared/\(period.rawValue)/\(shareType.rawValue).json"
                 ),
                 method: .get,
@@ -63,11 +66,12 @@ actor ArticlesService: ArticlesServiceProtocol {
         )
     }
     func getViewedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
-        try await NetworkManager.request(
+        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        return try await NetworkManager.request(
             request: .init(
                 url: .init(
                     baseURL: mainURL,
-                    version: .v1,
+                    version: .v2,
                     path: "viewed/\(period.rawValue).json"
                 ),
                 method: .get,

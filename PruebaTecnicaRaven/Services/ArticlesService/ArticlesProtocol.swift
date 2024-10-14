@@ -23,7 +23,8 @@ enum ArticleShareType: String {
     case facebook = "facebook"
 }
 
-protocol ArticlesServiceProtocol {
+protocol ArticlesServiceProtocol: Sendable {
+    var keychanAccount: String { get }
     func getEmailedArticles(period: ArticlePeriod) async throws -> GetArticleResponse?
     func getSharedArticles(period: ArticlePeriod) async throws -> GetArticleResponse?
     func getSharedArticles(period: ArticlePeriod,shareType: ArticleShareType) async throws -> GetArticleResponse?

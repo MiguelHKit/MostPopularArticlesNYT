@@ -24,7 +24,8 @@ struct LoadingView: View {
     }
 }
 
-struct LoadingModifier: ViewModifier {
+struct
+LoadingModifier: ViewModifier {
     @Binding var isLoading: Bool
     var isOpaque: Bool
 

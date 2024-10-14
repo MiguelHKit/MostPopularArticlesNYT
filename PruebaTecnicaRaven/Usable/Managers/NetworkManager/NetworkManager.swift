@@ -11,7 +11,7 @@ import OSLog
 actor NetworkManager {
     //GENERAL CONFIGURATION
     //    static nonisolated let IS_PRODUCTION: Bool = false
-    static nonisolated let BASE_URL: String   = "https://api.nytimes.com/svc/mostpopular/v2"
+    static nonisolated let BASE_URL: String   = "https://api.nytimes.com/svc/mostpopular"
     static nonisolated let printLogs: Bool = true
     private init() { }
     /// Main function to perform the request

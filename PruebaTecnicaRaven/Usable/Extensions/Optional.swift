@@ -7,6 +7,12 @@
 
 import Foundation
 
+extension Optional {
+    var isNotNil: Bool {
+        return self != nil
+    }
+}
+
 extension Optional where Wrapped: Sequence {
     func removeOptionals() -> [Wrapped.Element] {
         return self?.compactMap { $0 } ?? []

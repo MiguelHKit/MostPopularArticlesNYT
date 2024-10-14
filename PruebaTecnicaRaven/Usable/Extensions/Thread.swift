@@ -8,5 +8,5 @@
 import Foundation
 
 extension Thread {
-    static let actualCurrent = Thread.current
+    nonisolated(unsafe) static let actualCurrent = Thread.current
 }

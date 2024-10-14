@@ -51,14 +51,9 @@ struct ArticleModel: Identifiable, Hashable {
         let caption: String
         let copyright: String
         let approvedForSyndication: Bool
-        let thumnailImageUrl: URL?
-        let images: [Self.MediaImage]
-        struct MediaImage: Hashable {
-            let url: String
-            let format: NYTimageFormat
-            let width: Int
-            let height: Int
-        }
+        let thumbnailImageURL: URL?
+        let largeImageURL: URL?
+        let mediumImageURL: URL?
     }
     // MARK: MAPPING
     /// Map the data from GetArticleResponse to a model for view model
@@ -92,36 +87,27 @@ struct ArticleModel: Identifiable, Hashable {
     /// - Returns: [GetArticleResponse.Media]
     static func mapImagesFromService(_ response: [GetArticleItemResponse.MediaResponse?]) -> [Self.Media] {
         return response.map {
-            let imagesItems = $0?.mediaMetadata?.compactMap { $0 }.map { metaDataItem in
-                ArticleModel.Media.MediaImage(
-                    url: metaDataItem.url ?? "",
-                    format: .mapFromService(metaDataItem.format ?? ""),
-                    width: metaDataItem.width ?? 0,
-                    height: metaDataItem.width ?? 0
-                )
-            }
+            let imagesItems = $0?.mediaMetadata?.compactMap { $0 } ?? []
+            let thumbnailImageURLString = imagesItems.first(
+                where: {
+                    $0.format?.uppercased() == "standard thumbnail".uppercased()
+                })?.url
+            let largeImageURL = imagesItems.first(
+                where: {
+                    $0.format?.uppercased() == "mediumThreeByTwo440".uppercased()
+                })?.url
+            let mediumImageURL = imagesItems.first(
+                where: {
+                    $0.format?.uppercased() == "mediumThreeByTwo210".uppercased()
+                })?.url
             return ArticleModel.Media(
                 caption: $0?.caption ?? "",
                 copyright: $0?.copyright ?? "",
                 approvedForSyndication: $0?.approvedForSyndication == 1 ? true : false,
-                thumnailImageUrl: URL(string: imagesItems?.first(where: { $0.format == .thumnail })?.url ?? ""),
-                images: (imagesItems ?? []).filter { $0.format != .thumnail }
+                thumbnailImageURL: URL(string: thumbnailImageURLString.unwrapped),
+                largeImageURL: URL(string: largeImageURL.unwrapped),
+                mediumImageURL: URL(string: mediumImageURL.unwrapped)
             )
-        }
-    }
-}
-
-enum NYTimageFormat {
-    case thumnail
-    case mediumThreeByTwo210
-    case mediumThreeByTwo440
-    
-    static func mapFromService(_ value: String) -> NYTimageFormat {
-        switch value.uppercased() {
-        case "standard thumbnail".uppercased(): .thumnail
-        case "mediumThreeByTwo210".uppercased(): .mediumThreeByTwo210
-        case "mediumThreeByTwo440".uppercased(): .mediumThreeByTwo440
-        default: .mediumThreeByTwo440
         }
     }
 }

@@ -9,6 +9,7 @@ import Foundation
 
 // MARK: MOCK Service
 actor ArticlesMockService: ArticlesServiceProtocol {
+    let keychanAccount = "com.pruebaRaven.apikey"
     func getEmailedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
         guard
             let url = Bundle.main.url(forResource: "emailedArticlesResponse", withExtension: "json")
