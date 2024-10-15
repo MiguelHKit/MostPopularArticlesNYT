@@ -24,18 +24,22 @@ struct NetworkRequest {
         }
         let baseURL: String
         let version: Self.Version
-        let path: String
+        let path: String?
         
         func getComponents() -> URLComponents? {
             var components = URLComponents(string: baseURL)
             let previousPath = components?.path ?? ""
-            let path = switch version {
+            guard let path else {
+                components?.path = previousPath
+                return components
+            }
+            let actualPath: String = switch version {
             case .none:
                 previousPath + "/\(path)"
             default:
                 previousPath + "/\(version.rawValue)/\(path)"
             }
-            components?.path = path
+            components?.path = actualPath
             return components
         }
     }

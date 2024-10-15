@@ -15,30 +15,38 @@ struct MainView: View {
         NavigationStack {
             VStack(spacing: 0.0) {
                 Divider()
+                if !vm.hasInternet {
+                    self.noInternetBanner
+                        .task { await vm.onInternetLost() }
+                        .onDisappear { Task { await vm.onInternetRestored() } }
+                }
                 List(vm.articles) { article in
                     Button(
                         action: {
                             self.selecedArticle = article
                         },
-                        label: { self.articleRow(article) })
-                    .buttonStyle(.plain)
+                        label: { self.articleRow(article) }
+                    )
+//                    .buttonStyle(.plain)
+                    .foregroundStyle(.primary)
                     .listRowSeparator(vm.articles.first == article ? .hidden : .visible, edges: .top)
                 }
                 .listStyle(.grouped)
                 .scrollContentBackground(.hidden)
                 .contentMargins(0)
                 .refreshable(action: vm.refreshArticles)
-//                .environment(\.defaultMinListHeaderHeight, 0)
+                .navigationDestination(item: $selecedArticle) { article in
+                    ArticleDetailView(article: article)
+                }
             }
             .animation(.default, value: vm.isLoading)
+            .animation(.default, value: vm.hasInternet)
             .toolbar(content: self.toolbarContent)
             .navigationTitle(Text(String(localized: "articles")))
-//            .navigationBarTitleDisplayMode(.large)
+            //            .navigationBarTitleDisplayMode(.large)
+            .task(vm.monitorInternetConectionTask)
             .loading(isLoading: $vm.isLoading)
             .emptyDataViewModifier(onCondition: { vm.articles.isEmpty && !vm.isLoading })
-            .navigationDestination(item: $selecedArticle) { article in
-                ArticleDetailView(article: article)
-            }
         }
     }
     @ViewBuilder
@@ -52,10 +60,10 @@ struct MainView: View {
                     if !article.byline.isEmpty {
                         Divider()
                             .frame(height: 15)
+                        Text(article.byline)
+                            .font(.subheadline)
+                            .lineLimit(1)
                     }
-                    Text(article.byline)
-                        .font(.subheadline)
-                        .lineLimit(1)
                 }
                 Text(article.title)
                     .font(.title)
@@ -64,25 +72,35 @@ struct MainView: View {
                     .lineLimit(nil)
             }
             Spacer()
-            // image
-            AsyncImage(
-                url: article.media.first(where: { $0.thumbnailImageURL != nil })?.thumbnailImageURL,
-                transaction: Transaction(animation: .linear),
-                content: { image in
-                    switch image {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 75, height: 75)
-                    default:
-                        Rectangle()
-                            .foregroundStyle(Color(.systemBackground))
-                            .frame(width: 75, height: 75)
-                    }
+            // Tries load image from its data
+            if let mediaItem = article.media.first(where: { $0.thumbnailImageData != nil }), let imageData = mediaItem.thumbnailImageData, let uiimage = UIImage(data: imageData) {
+                Image(uiImage: uiimage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 75, height: 75)
+                    .padding(.trailing,10)
+            } else { // else load using async image
+                if let mediaItem = article.media.first(where: { $0.thumbnailImageURL != nil }) {
+                    AsyncImage(
+                        url: mediaItem.thumbnailImageURL,
+                        transaction: Transaction(animation: .linear),
+                        content: { image in
+                            switch image {
+                            case .success(let image):
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(width: 75, height: 75)
+                            default:
+                                Rectangle()
+                                    .foregroundStyle(Color(uiColor: .secondarySystemBackground))
+                                    .frame(width: 75, height: 75)
+                            }
+                        }
+                    )
+                    .padding(.trailing,10)
                 }
-            )
-            .padding(.trailing,10)
+            }
         }
         .id(article.id)
         //                .multilineTextAlignment(.leading)
@@ -98,7 +116,7 @@ struct MainView: View {
                     Button(buttonOneTitle, systemImage: vm.apiKeyFromKeychain.isNotNil ? "pencil" : "plus") {
                         AlertManager.shared.displayTextFieldAlert(
                             title: String(localized: "advice"),
-                            message: KeychainError.keyNotFound.localizedDescription,
+                            message: String(localized: "AlertAPIKeyMessage"),
                             onTextfieldSubmit: { submitedValue in
                                 Task {
                                     await vm.saveAPIKeyOnKeychan(submitedValue)
@@ -114,8 +132,8 @@ struct MainView: View {
                             message: String(localized: "AlertRemoveAPIKeyMessage"),
                             confirmAction: {
                                 Task {
-                                    await vm.removeKeyFromKeychan()
-                                    vm.resetData()
+                                    await vm.removeAPIKeyFromKeychan()
+                                    await vm.resetData()
                                 }
                             },
                             cancelAction: { }
@@ -135,6 +153,18 @@ struct MainView: View {
             }
         }
     }
+    @ViewBuilder
+    var noInternetBanner: some View {
+        HStack {
+            Spacer()
+            Text(String(localized: "noInternetConection"))
+                .foregroundStyle(.background)
+                .fontWeight(.medium)
+            Spacer()
+        }
+        .padding(15)
+        .background(.gray)
+    }
 }
 
 #Preview {
@@ -151,7 +181,7 @@ struct ArticleDetailView: View {
                     if let imageURL = media.largeImageURL {
                         AsyncImage(
                             url: imageURL,
-//                            transaction: nil,
+                            //                            transaction: nil,
                             content: { image in
                                 switch image {
                                 case .success(let image):
@@ -160,6 +190,7 @@ struct ArticleDetailView: View {
                                 }
                             }
                         )
+                        .aspectRatio(contentMode: .fit)
                         .containerRelativeFrame(.horizontal, alignment: .center)
                     }
                 }
@@ -168,14 +199,22 @@ struct ArticleDetailView: View {
             .scrollTargetBehavior(.paging)
             .scrollBounceBehavior(.basedOnSize)
             .scrollIndicators(.hidden)
-            .background(.red)
             // Head
             HStack {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(article.title)
                         .font(.title)
-                    Text(article.byline)
-                        .font(.subheadline)
+                    HStack {
+                        Text(article.section)
+                            .font(.subheadline)
+                        if !article.byline.isEmpty {
+                            Divider()
+                                .frame(height: 15)
+                            Text(article.byline)
+                                .font(.subheadline)
+                                .lineLimit(1)
+                        }
+                    }
                     Text(article.updatedDate.formatted(date: .long, time: .omitted))
                         .font(.subheadline)
                 }
@@ -196,6 +235,6 @@ struct ArticleDetailView: View {
                 Spacer()
             }
         }
-//        .ignoresSafeArea(edges: .top)
+        //        .ignoresSafeArea(edges: .top)
     }
 }

@@ -27,4 +27,5 @@ extension String {
         default: return 1
         }
     }
+    var isNotEmpty: Bool { !isEmpty }
 }

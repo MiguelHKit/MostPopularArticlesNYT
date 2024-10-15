@@ -20,6 +20,22 @@
         }
       }
     },
+    "AlertAPIKeyMessage" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter your API Key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ingresar API Key"
+          }
+        }
+      }
+    },
     "AlertRemoveAPIKeyMessage" : {
       "localizations" : {
         "en" : {
@@ -59,6 +75,12 @@
             "state" : "translated",
             "value" : "An authorization error ocurred"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ocurrió un error durante la autorización"
+          }
         }
       }
     },
@@ -68,6 +90,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bad response from server"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mala respuesta del servidor"
           }
         }
       }
@@ -143,6 +171,12 @@
             "state" : "translated",
             "value" : "There was an error during data conversion"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hubo un error al convertir de la información"
+          }
         }
       }
     },
@@ -152,6 +186,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "There was an error when trying to decode"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hubo un error al decodificar"
           }
         }
       }
@@ -163,6 +203,12 @@
             "state" : "translated",
             "value" : "There was an error when trying to encode data to be sent"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hubo un error al codificar la información a enviar"
+          }
         }
       }
     },
@@ -172,6 +218,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "An error has occurred"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha ocurrido un error"
           }
         }
       }
@@ -183,6 +235,12 @@
             "state" : "translated",
             "value" : "An error has occurred. Please try again later"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ha ocurrido un error. inténtelo de nuevo más tarde "
+          }
         }
       }
     },
@@ -193,11 +251,30 @@
             "state" : "translated",
             "value" : "Error"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error"
+          }
         }
       }
     },
     "generalPlaceholderMessage" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter value"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Ingresar"
+          }
+        }
+      }
     },
     "invalidParameters" : {
       "localizations" : {
@@ -205,6 +282,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "The given parameters are not valid"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los parámetros son inválidos"
           }
         }
       }
@@ -216,6 +299,12 @@
             "state" : "translated",
             "value" : "Response is invalid"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La respuesta es invalida"
+          }
         }
       }
     },
@@ -226,6 +315,12 @@
             "state" : "translated",
             "value" : "No valid URL"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL Invalida"
+          }
         }
       }
     },
@@ -235,6 +330,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Invalid data data for the Keychain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "información invalida para el llavero"
           }
         }
       }
@@ -272,22 +373,80 @@
       }
     },
     "keychainUnableToDelete" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to save delete on keychain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "No fue posible eliminar la clave en el llavero"
+          }
+        }
+      }
     },
     "keychainUnableToSave" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unable to save value on keychain"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "No fue posible guardar la clave en el llavero"
+          }
+        }
+      }
     },
     "Link to full article" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Link to the full article"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Enlace al articulo completo"
+          }
+        }
+      }
     },
     "localRequestError" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Local request Error"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Hubo un error con la petición local"
+          }
+        }
+      }
     },
     "noApiKey" : {
       "localizations" : {
-        "es" : {
+        "en" : {
           "stringUnit" : {
             "state" : "translated",
+            "value" : "No API Key"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
             "value" : "Sin API Key"
           }
         }
@@ -321,6 +480,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "No hay información de artículos para mostrar"
+          }
+        }
+      }
+    },
+    "noInternetConection" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No internet connection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Sin conexión a internet"
           }
         }
       }
@@ -412,11 +587,30 @@
             "state" : "translated",
             "value" : "URL does not exist"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No existe la URL"
+          }
         }
       }
     },
     "URLPathHasNoSlash" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL has no slash"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "needs_review",
+            "value" : "Error al crear parametros de URL"
+          }
+        }
+      }
     },
     "validationError" : {
       "localizations" : {
@@ -424,6 +618,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "There was an error during validation"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hubo un error durante la validación"
           }
         }
       }

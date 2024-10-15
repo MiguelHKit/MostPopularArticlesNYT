@@ -11,8 +11,8 @@ import OSLog
 actor NetworkManager {
     //GENERAL CONFIGURATION
     //    static nonisolated let IS_PRODUCTION: Bool = false
-    static nonisolated let BASE_URL: String   = "https://api.nytimes.com/svc/mostpopular"
-    static nonisolated let printLogs: Bool = true
+    static nonisolated let BASE_URL: String = "https://api.nytimes.com/svc/mostpopular"
+    static nonisolated let printLogs: Bool = false
     private init() { }
     /// Main function to perform the request
     public static func request(request req: NetworkRequest) async throws -> NetworkResponse {
@@ -42,7 +42,9 @@ actor NetworkManager {
         }
         // Configuration
         let configuration = URLSessionConfiguration.default
-        //        configuration.requestCachePolicy
+        configuration.isDiscretionary = true
+        configuration.waitsForConnectivity = true
+//        configuration.requestCachePolicy = .returnCacheDataElseLoad
         let session = URLSession(configuration: configuration)
         // MAKING THE RESQUEST
         let (data, rawResponse) = try await session.data(for: request)
@@ -112,6 +114,12 @@ actor NetworkManager {
                 )
             )
         )
+    }
+    public static func fetchData(url: String) async throws -> Data? {
+        try await Self.request(request: .init(
+            url: NetworkRequest.NetworkURL(baseURL: url, version: .none, path: nil),
+            method: .get
+        )).data
     }
     public static func decode<T: Codable>(data: Data) async throws -> T {
         let jsonDecoder = JSONDecoder()

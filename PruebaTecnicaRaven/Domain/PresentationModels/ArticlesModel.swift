@@ -7,12 +7,12 @@
 
 import Foundation
 
-struct ArticleModel: Identifiable, Hashable {
+struct ArticleModel: Identifiable, Hashable, Codable {
     static func == (lhs: ArticleModel, rhs: ArticleModel) -> Bool {
         lhs.id == rhs.id
     }
     // MARK: DEFINITION
-    let id = UUID()
+    let id: UUID
     // MARK: General
     // id for identifiable
     let responseId: String
@@ -41,19 +41,22 @@ struct ArticleModel: Identifiable, Hashable {
     let personFacets: [String]
     let geographycFacets: [String]
     //
-    let media: [Self.Media]
+    var media: [Self.Media]
     // MARK: Media
-    struct Media: Hashable {
+    struct Media: Hashable, Codable {
         static func == (lhs: ArticleModel.Media, rhs: ArticleModel.Media) -> Bool {
             lhs.id == rhs.id
         }
-        let id: UUID = UUID()
+        let id: UUID
         let caption: String
         let copyright: String
         let approvedForSyndication: Bool
         let thumbnailImageURL: URL?
+        var thumbnailImageData: Data?
         let largeImageURL: URL?
+        var largeImageData: Data?
         let mediumImageURL: URL?
+        var mediumImageData: Data?
     }
     // MARK: MAPPING
     /// Map the data from GetArticleResponse to a model for view model
@@ -62,6 +65,7 @@ struct ArticleModel: Identifiable, Hashable {
     static func mapFromService(_ response: GetArticleResponse?) -> [Self] {
         let articlesMapped = (response?.results ?? []).map {
             ArticleModel(
+                id: UUID(),
                 responseId: String($0.id ?? 0),
                 url: $0.url.unwrapped,
                 adxKeywords: $0.adxKeywords?.components(separatedBy: ";") ?? [],
@@ -101,12 +105,16 @@ struct ArticleModel: Identifiable, Hashable {
                     $0.format?.uppercased() == "mediumThreeByTwo210".uppercased()
                 })?.url
             return ArticleModel.Media(
+                id: UUID(),
                 caption: $0?.caption ?? "",
                 copyright: $0?.copyright ?? "",
                 approvedForSyndication: $0?.approvedForSyndication == 1 ? true : false,
                 thumbnailImageURL: URL(string: thumbnailImageURLString.unwrapped),
+                thumbnailImageData: nil,
                 largeImageURL: URL(string: largeImageURL.unwrapped),
-                mediumImageURL: URL(string: mediumImageURL.unwrapped)
+                largeImageData: nil,
+                mediumImageURL: URL(string: mediumImageURL.unwrapped),
+                mediumImageData: nil
             )
         }
     }

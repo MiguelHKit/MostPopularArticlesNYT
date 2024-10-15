@@ -6,7 +6,9 @@
 //
 
 import Foundation
+import SwiftUI
 import Observation
+import Network
 import OSLog
 
 @MainActor
@@ -14,22 +16,28 @@ import OSLog
 final class MainViewModel: Sendable {
     var articles: [ArticleModel] = []
     var isLoading: Bool = true
+    var hasInternet: Bool = true
     var periodSelection: ArticlePeriod = .aDay
     var apiKeyFromKeychain: String? = nil
     @ObservationIgnored private let articlesService: ArticlesServiceProtocol
-    
+    @ObservationIgnored private let monitor: NWPathMonitor = NWPathMonitor()
+    // MARK: Init
     init(articlesService: ArticlesServiceProtocol = ArticlesService()) {
         self.articlesService = articlesService
         Task { await self.initData() }
     }
     nonisolated func initData() async {
         await MainActor.run { self.isLoading = true }
-#if !DEBUG
-        await getAPIKeyFromKeychain()
-#endif
-        await getArticles()
+        if await hasInternet {
+            await getAPIKeyFromKeychain()
+            await getArticles()
+        } else {
+            await self.getArticlesSavedLocally()
+        }
         await MainActor.run { self.isLoading = false }
+        await loadDataImagesForPerformance()
     }
+    // MARK: Service
     nonisolated func getArticles() async {
         do {
             guard
@@ -49,18 +57,61 @@ final class MainViewModel: Sendable {
         } catch {
             await handleGeneralError(error)
         }
-        
     }
     @Sendable
     nonisolated func refreshArticles() async {
+        guard await hasInternet else { return }
         try? await Task.sleep(for: .seconds(1))
         await self.getArticles()
     }
+    // MARK: Network monitor
+    @Sendable
+    nonisolated func monitorInternetConectionTask() async {
+        for await update in self.monitor {
+            let conected = update.status == .satisfied
+            await MainActor.run {
+                self.hasInternet = conected
+            }
+        }
+    }
+    nonisolated func onInternetLost() async {
+        await saveArticlesLocally()
+        await getArticlesSavedLocally()
+    }
+    nonisolated func onInternetRestored() async {
+        await self.removeArticlesSavedLocally()
+        await self.initData()
+    }
+    // MARK: Common
+    deinit { monitor.cancel() }
     func resetData() {
         articles.removeAll()
-        
     }
-    // MARK: KEYCHAIN
+    nonisolated func loadDataImagesForPerformance() async {
+        var articleCopy = await articles
+        for article in articleCopy {
+            for mediaItem in article.media {
+                guard
+                let articleIndex = articleCopy.firstIndex(of: article),
+                let mediaIndex = article.media.firstIndex(of: mediaItem)
+                else { return }
+                if let thumbnailStringURL = mediaItem.thumbnailImageURL?.absoluteString {
+                    if let thumnailData =  try? await NetworkManager.fetchData(url: thumbnailStringURL), let uiimage = UIImage(data: thumnailData) {
+                        articleCopy[articleIndex].media[mediaIndex].thumbnailImageData = uiimage.pngData()
+                    }
+                }
+                if let imageStringURL = mediaItem.largeImageURL?.absoluteString {
+                    let ImageData =  try? await NetworkManager.fetchData(url: imageStringURL)
+                    articleCopy[articleIndex].media[mediaIndex].largeImageData = ImageData
+                }
+            }
+        }
+        os_log("Images loaded with data insted of url")
+        await MainActor.run { [articleCopy] in
+            self.articles = articleCopy
+        }
+    }
+    // MARK: Keychain
     nonisolated func getAPIKeyFromKeychain() async {
         do {
             let apiKey = try await KeychainManager.getAPIKey(for: articlesService.keychanAccount)
@@ -82,13 +133,41 @@ final class MainViewModel: Sendable {
             handleGeneralError(error)
         }
     }
-    func removeKeyFromKeychan() async {
+    func removeAPIKeyFromKeychan() async {
         do {
             try await KeychainManager.deleteAPIKey(for: articlesService.keychanAccount)
         } catch let error as KeychainError {
             handleKeychainError(error)
         } catch {
             handleGeneralError(error)
+        }
+    }
+    // MARK: Save for Offline
+    nonisolated func saveArticlesLocally() async {
+        do {
+            guard await articles.isNotEmpty else { return }
+            try await LocalFileManager.shared.saveOnDocuments(model: self.articles, withName: "articles")
+            os_log("Saved files locally")
+        } catch {
+            await handleGeneralError(error)
+        }
+    }
+    nonisolated func getArticlesSavedLocally() async {
+        do {
+            let localArticlesFetched: [ArticleModel] = try await LocalFileManager.shared.getModelFromDocuments(withName: "articles")
+            await MainActor.run {
+                self.articles = localArticlesFetched
+            }
+        } catch {
+            await handleGeneralError(error)
+        }
+    }
+    nonisolated func removeArticlesSavedLocally() async {
+        do {
+            try await LocalFileManager.shared.deleteFileFromDocuments(withName: "articles")
+            os_log("locally files deleted")
+        } catch {
+            await handleGeneralError(error)
         }
     }
     // MARK: Handle Error
@@ -113,9 +192,16 @@ final class MainViewModel: Sendable {
         )
     }
     func handleGeneralError(_ error: Error) {
-        AlertManager.shared.displayAlert(
-            title: String(localized: "errorTitle"),
-            message: NetworkError.generalErrorMessage
-        )
+        if error.localizedDescription.isEmpty {
+            AlertManager.shared.displayAlert(
+                title: String(localized: "errorTitle"),
+                message: String(localized: "generalErrorMessage")
+            )
+        } else {
+            AlertManager.shared.displayAlert(
+                title: String(localized: "errorTitle"),
+                message: error.localizedDescription
+            )
+        }
     }
 }

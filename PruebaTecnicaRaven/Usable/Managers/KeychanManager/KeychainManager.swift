@@ -32,7 +32,7 @@ actor KeychainManager {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: account,
-            kSecReturnData as String: kCFBooleanTrue!,
+            kSecReturnData as String: true,
             kSecMatchLimit as String: kSecMatchLimitOne
         ]
 
@@ -60,29 +60,6 @@ actor KeychainManager {
         let status = SecItemDelete(query as CFDictionary)
         if status != errSecSuccess {
             throw KeychainError.unableToDelete
-        }
-    }
-}
-
-enum KeychainError: Error {
-    case unableToSave
-    case keyNotFound
-    case invalidData
-    case unableToDelete
-    func localizedTitle() -> String {
-        switch self {
-        case .unableToSave: String(localized: "errorTitle")
-        case .keyNotFound: String(localized: "keychainKeyNotFoundTitle")
-        case .invalidData: String(localized: "errorTitle")
-        case .unableToDelete: String(localized: "errorTitle")
-        }
-    }
-    func localizedDescription() -> String {
-        switch self {
-        case .unableToSave: String(localized: "keychainUnableToSave")
-        case .keyNotFound: String(localized: "keychainKeyNotFound")
-        case .invalidData: String(localized: "keychainInvalidData")
-        case .unableToDelete: String(localized: "keychainUnableToDelete")
         }
     }
 }
