@@ -20,15 +20,20 @@ final class MainViewModel: Sendable {
     var periodSelection: ArticlePeriod = .aDay
     var apiKeyFromKeychain: String? = nil
     @ObservationIgnored private let articlesService: ArticlesServiceProtocol
+    @ObservationIgnored private let keychainManager: KeychainManagerProtocol
+    @ObservationIgnored private let localFileManager: LocalFileManagerProtocol
     @ObservationIgnored private let monitor: NWPathMonitor = NWPathMonitor()
     // MARK: Init
-    init(articlesService: ArticlesServiceProtocol = ArticlesService()) {
+    init(articlesService: ArticlesServiceProtocol = ArticlesService(), keychainManager: KeychainManagerProtocol = KeychainManager.shared, localFileManager: LocalFileManagerProtocol = LocalFileManager()) {
         self.articlesService = articlesService
+        self.keychainManager = keychainManager
+        self.localFileManager = localFileManager
         Task { await self.initData() }
     }
     nonisolated func initData() async {
         await MainActor.run { self.isLoading = true }
         if await hasInternet {
+            await removeArticlesSavedLocally()
             await getAPIKeyFromKeychain()
             await getArticles()
         } else {
@@ -114,7 +119,7 @@ final class MainViewModel: Sendable {
     // MARK: Keychain
     nonisolated func getAPIKeyFromKeychain() async {
         do {
-            let apiKey = try await KeychainManager.getAPIKey(for: articlesService.keychanAccount)
+            let apiKey = try await keychainManager.getAPIKey(for: articlesService.keychanAccount)
             await MainActor.run {
                 self.apiKeyFromKeychain = apiKey
             }
@@ -126,7 +131,7 @@ final class MainViewModel: Sendable {
     }
     func saveAPIKeyOnKeychan(_ apiKey: String) async {
         do {
-            try await KeychainManager.saveAPIKey(apiKey, for: articlesService.keychanAccount)
+            try await keychainManager.saveAPIKey(apiKey, for: articlesService.keychanAccount)
         } catch let error as KeychainError {
             handleKeychainError(error)
         } catch {
@@ -135,18 +140,18 @@ final class MainViewModel: Sendable {
     }
     func removeAPIKeyFromKeychan() async {
         do {
-            try await KeychainManager.deleteAPIKey(for: articlesService.keychanAccount)
+            try await keychainManager.deleteAPIKey(for: articlesService.keychanAccount)
         } catch let error as KeychainError {
             handleKeychainError(error)
         } catch {
             handleGeneralError(error)
         }
     }
-    // MARK: Save for Offline
+    // MARK: Offline
     nonisolated func saveArticlesLocally() async {
         do {
             guard await articles.isNotEmpty else { return }
-            try await LocalFileManager.shared.saveOnDocuments(model: self.articles, withName: "articles")
+            try await localFileManager.saveOnDocuments(model: self.articles, withName: "articles")
             os_log("Saved files locally")
         } catch {
             await handleGeneralError(error)
@@ -154,7 +159,7 @@ final class MainViewModel: Sendable {
     }
     nonisolated func getArticlesSavedLocally() async {
         do {
-            let localArticlesFetched: [ArticleModel] = try await LocalFileManager.shared.getModelFromDocuments(withName: "articles")
+            let localArticlesFetched: [ArticleModel] = try await localFileManager.getModelFromDocuments(withName: "articles")
             await MainActor.run {
                 self.articles = localArticlesFetched
             }
@@ -164,7 +169,7 @@ final class MainViewModel: Sendable {
     }
     nonisolated func removeArticlesSavedLocally() async {
         do {
-            try await LocalFileManager.shared.deleteFileFromDocuments(withName: "articles")
+            try await localFileManager.deleteFileFromDocuments(withName: "articles")
             os_log("locally files deleted")
         } catch {
             await handleGeneralError(error)

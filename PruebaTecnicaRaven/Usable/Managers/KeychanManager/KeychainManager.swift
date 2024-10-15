@@ -7,9 +7,17 @@
 
 import Foundation
 
-actor KeychainManager {
+protocol KeychainManagerProtocol: Sendable {
+    func saveAPIKey(_ apiKey: String, for account: String) async throws
+    func getAPIKey(for account: String) async throws -> String
+    func deleteAPIKey(for account: String) async throws
+}
+
+actor KeychainManager: KeychainManagerProtocol {
+    static let shared = KeychainManager()
+    private init() { }
     // Guardar la API key en el Keychain
-    static func saveAPIKey(_ apiKey: String, for account: String) async throws {
+    func saveAPIKey(_ apiKey: String, for account: String) async throws {
         guard let data = apiKey.data(using: .utf8) else { throw KeychainError.invalidData }
         // query
         let query: [String: Any] = [
@@ -28,7 +36,7 @@ actor KeychainManager {
     }
 
     // Recuperar la API key del Keychain
-    static func getAPIKey(for account: String) async throws -> String {
+    func getAPIKey(for account: String) async throws -> String {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: account,
@@ -51,7 +59,7 @@ actor KeychainManager {
     }
 
     // Eliminar la API key del Keychain
-    static func deleteAPIKey(for account: String) async throws {
+    func deleteAPIKey(for account: String) async throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
             kSecAttrAccount as String: account

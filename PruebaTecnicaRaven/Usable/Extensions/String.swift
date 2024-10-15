@@ -16,6 +16,7 @@ enum DateFormat: String {
 }
 
 extension String {
+    var isNotEmpty: Bool { !isEmpty }
     func toDate(format: DateFormat) -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format.rawValue
@@ -27,5 +28,8 @@ extension String {
         default: return 1
         }
     }
-    var isNotEmpty: Bool { !isEmpty }
+    static func randomString(length: Int) -> String {
+        let letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        return String((0..<length).map { _ in letters.randomElement()! })
+    }
 }

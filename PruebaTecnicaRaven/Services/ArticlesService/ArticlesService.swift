@@ -12,7 +12,7 @@ actor ArticlesService: ArticlesServiceProtocol {
     let mainURL: String = NetworkManager.BASE_URL
     let keychanAccount = "com.pruebaRaven.apikey"
     func getEmailedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
-        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        let apiKey = try await KeychainManager.shared.getAPIKey(for: keychanAccount)
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -30,7 +30,7 @@ actor ArticlesService: ArticlesServiceProtocol {
         )
     }
     func getSharedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
-        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        let apiKey = try await KeychainManager.shared.getAPIKey(for: keychanAccount)
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -48,7 +48,7 @@ actor ArticlesService: ArticlesServiceProtocol {
         )
     }
     func getSharedArticles(period: ArticlePeriod, shareType: ArticleShareType) async throws -> GetArticleResponse? {
-        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        let apiKey = try await KeychainManager.shared.getAPIKey(for: keychanAccount)
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
@@ -66,7 +66,7 @@ actor ArticlesService: ArticlesServiceProtocol {
         )
     }
     func getViewedArticles(period: ArticlePeriod) async throws -> GetArticleResponse? {
-        let apiKey = try await KeychainManager.getAPIKey(for: keychanAccount)
+        let apiKey = try await KeychainManager.shared.getAPIKey(for: keychanAccount)
         return try await NetworkManager.request(
             request: .init(
                 url: .init(
