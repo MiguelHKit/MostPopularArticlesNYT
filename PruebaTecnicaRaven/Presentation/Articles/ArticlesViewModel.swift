@@ -80,7 +80,7 @@ final class ArticlesViewModel: Sendable {
         }
     }
     nonisolated func onInternetLost() async {
-        await saveArticlesLocally()
+        guard await saveArticlesLocally() else { return }
         await getArticlesSavedLocally()
     }
     nonisolated func onInternetRestored() async {
@@ -142,13 +142,15 @@ final class ArticlesViewModel: Sendable {
         }
     }
     // MARK: Offline
-    nonisolated func saveArticlesLocally() async {
+    nonisolated func saveArticlesLocally() async -> Bool {
         do {
-            guard await articles.isNotEmpty else { return }
+            guard await articles.isNotEmpty else { return false }
             try await localFileManager.saveOnDocuments(model: self.articles, withName: "articles")
+            return true
 //            os_log("Saved files locally")
         } catch {
             await handleGeneralError(error)
+            return false
         }
     }
     nonisolated func getArticlesSavedLocally() async {
@@ -180,14 +182,14 @@ final class ArticlesViewModel: Sendable {
         default:
             AlertManager.shared.displayAlert(
                 title: NetworkError.generalErrorTitle,
-                message: error.localizedDescription()
+                message: error.localizedDescription
             )
         }
     }
     func handleKeychainError(_ error: KeychainError) {
         AlertManager.shared.displayAlert(
             title: error.localizedTitle(),
-            message: error.localizedDescription()
+            message: error.localizedDescription
         )
     }
     func handleGeneralError(_ error: Error) {

@@ -27,6 +27,7 @@ actor LocalFileManager: LocalFileManagerProtocol {
     }
     nonisolated func getModelFromDocuments<T: Codable>(withName name: String) async throws -> T {
         let fileURL = await getDocumentsDirectory().appendingPathComponent("\(name).json")
+        guard FileManager.default.fileExists(atPath: fileURL.path()) else { throw NetworkError.noData }
         let data = try Data(contentsOf: fileURL)
         let decoder = JSONDecoder()
         let model = try decoder.decode(T.self, from: data)

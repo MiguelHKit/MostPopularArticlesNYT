@@ -25,8 +25,10 @@ enum NetworkError: Error {
 //    case noModelDefined
     static let generalErrorTitle = String(localized: "generalErrorTitle")
     static let generalErrorMessage = String(localized: "generalErrorMessage")
-    
-    func localizedDescription() -> String {
+}
+ 
+extension NetworkError: LocalizedError {
+    public var errorDescription: String? {
         switch self {
         case .badResponse: String(localized: "badResponse")
         case .invalidURL: String(localized: "invalidURL")

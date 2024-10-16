@@ -20,7 +20,10 @@ enum KeychainError: Error {
         case .unableToDelete: String(localized: "errorTitle")
         }
     }
-    func localizedDescription() -> String {
+}
+
+extension KeychainError: LocalizedError {
+    public var errorDescription: String? {
         switch self {
         case .unableToSave: String(localized: "keychainUnableToSave")
         case .keyNotFound: String(localized: "keychainKeyNotFound")
