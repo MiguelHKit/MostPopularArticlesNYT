@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class PruebaTecnicaRavenUITestsLaunchTests: XCTestCase {
+final class MostPopularArticlesNYTUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct PruebaTecnicaRavenApp: App {
+struct MostPopularArticlesNYTApp: App {
     var body: some Scene {
         WindowGroup {
             ArticlesView()

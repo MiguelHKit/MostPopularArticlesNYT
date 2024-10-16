@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "842352692CB704940001620C"
-               BuildableName = "PruebaTecnicaRaven.app"
-               BlueprintName = "PruebaTecnicaRaven"
-               ReferencedContainer = "container:PruebaTecnicaRaven.xcodeproj">
+               BuildableName = "MostPopularArticlesNYT.app"
+               BlueprintName = "MostPopularArticlesNYT"
+               ReferencedContainer = "container:MostPopularArticlesNYT.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -36,9 +36,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8423527A2CB704950001620C"
-               BuildableName = "PruebaTecnicaRavenTests.xctest"
-               BlueprintName = "PruebaTecnicaRavenTests"
-               ReferencedContainer = "container:PruebaTecnicaRaven.xcodeproj">
+               BuildableName = "MostPopularArticlesNYTTests.xctest"
+               BlueprintName = "MostPopularArticlesNYTTests"
+               ReferencedContainer = "container:MostPopularArticlesNYT.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -47,9 +47,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "842352842CB704950001620C"
-               BuildableName = "PruebaTecnicaRavenUITests.xctest"
-               BlueprintName = "PruebaTecnicaRavenUITests"
-               ReferencedContainer = "container:PruebaTecnicaRaven.xcodeproj">
+               BuildableName = "MostPopularArticlesNYTUITests.xctest"
+               BlueprintName = "MostPopularArticlesNYTUITests"
+               ReferencedContainer = "container:MostPopularArticlesNYT.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -69,9 +69,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "842352692CB704940001620C"
-            BuildableName = "PruebaTecnicaRaven.app"
-            BlueprintName = "PruebaTecnicaRaven"
-            ReferencedContainer = "container:PruebaTecnicaRaven.xcodeproj">
+            BuildableName = "MostPopularArticlesNYT.app"
+            BlueprintName = "MostPopularArticlesNYT"
+            ReferencedContainer = "container:MostPopularArticlesNYT.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -86,9 +86,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "842352692CB704940001620C"
-            BuildableName = "PruebaTecnicaRaven.app"
-            BlueprintName = "PruebaTecnicaRaven"
-            ReferencedContainer = "container:PruebaTecnicaRaven.xcodeproj">
+            BuildableName = "MostPopularArticlesNYT.app"
+            BlueprintName = "MostPopularArticlesNYT"
+            ReferencedContainer = "container:MostPopularArticlesNYT.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

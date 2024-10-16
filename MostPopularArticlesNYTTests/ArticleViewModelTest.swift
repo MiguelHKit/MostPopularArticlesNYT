@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import PruebaTecnicaRaven
+@testable import MostPopularArticlesNYT
 
 final class ArticleViewModelTest: XCTestCase {
 //    private var mockService: ArticlesMockService!
