@@ -13,7 +13,7 @@ import OSLog
 
 @MainActor
 @Observable
-final class MainViewModel: Sendable {
+final class ArticlesViewModel: Sendable {
     var articles: [ArticleModel] = []
     var isLoading: Bool = true
     var hasInternet: Bool = true
@@ -34,7 +34,6 @@ final class MainViewModel: Sendable {
         await MainActor.run { self.isLoading = true }
         if await hasInternet {
             await removeArticlesSavedLocally()
-            await getAPIKeyFromKeychain()
             await getArticles()
         } else {
             await self.getArticlesSavedLocally()
@@ -45,6 +44,7 @@ final class MainViewModel: Sendable {
     // MARK: Service
     nonisolated func getArticles() async {
         do {
+            try await getAPIKeyFromKeychain()
             guard
                 let articlesResponse = try await self.articlesService.getViewedArticles(period: periodSelection),
                 articlesResponse.status?.uppercased() == "OK"
@@ -111,22 +111,16 @@ final class MainViewModel: Sendable {
                 }
             }
         }
-        os_log("Images loaded with data insted of url")
+//        os_log("Images loaded with data insted of url")
         await MainActor.run { [articleCopy] in
             self.articles = articleCopy
         }
     }
     // MARK: Keychain
-    nonisolated func getAPIKeyFromKeychain() async {
-        do {
-            let apiKey = try await keychainManager.getAPIKey(for: articlesService.keychanAccount)
-            await MainActor.run {
-                self.apiKeyFromKeychain = apiKey
-            }
-        } catch let error as KeychainError {
-            await handleKeychainError(error)
-        } catch {
-            await handleGeneralError(error)
+    nonisolated func getAPIKeyFromKeychain() async throws {
+        let apiKey = try await keychainManager.getAPIKey(for: articlesService.keychanAccount)
+        await MainActor.run {
+            self.apiKeyFromKeychain = apiKey
         }
     }
     func saveAPIKeyOnKeychan(_ apiKey: String) async {
@@ -152,7 +146,7 @@ final class MainViewModel: Sendable {
         do {
             guard await articles.isNotEmpty else { return }
             try await localFileManager.saveOnDocuments(model: self.articles, withName: "articles")
-            os_log("Saved files locally")
+//            os_log("Saved files locally")
         } catch {
             await handleGeneralError(error)
         }
@@ -170,7 +164,7 @@ final class MainViewModel: Sendable {
     nonisolated func removeArticlesSavedLocally() async {
         do {
             try await localFileManager.deleteFileFromDocuments(withName: "articles")
-            os_log("locally files deleted")
+//            os_log("locally files deleted")
         } catch {
             await handleGeneralError(error)
         }

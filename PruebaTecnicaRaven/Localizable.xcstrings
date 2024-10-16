@@ -191,7 +191,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hubo un error al decodificar"
+            "value" : "Hubo un error al decodificar la información"
           }
         }
       }

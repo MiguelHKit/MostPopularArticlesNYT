@@ -7,19 +7,21 @@
 
 import SwiftUI
 
-struct MainView: View {
-    @State var vm: MainViewModel = .init()
+struct ArticlesView: View {
+    @State var vm: ArticlesViewModel = .init()
     @State var selecedArticle: ArticleModel?
     
     var body: some View {
         NavigationStack {
             VStack(spacing: 0.0) {
                 Divider()
+                // NO INTERNET BANNER
                 if !vm.hasInternet {
                     self.noInternetBanner
                         .task { await vm.onInternetLost() }
                         .onDisappear { Task { await vm.onInternetRestored() } }
                 }
+                // LIST OF ARTICLES
                 List(vm.articles) { article in
                     Button(
                         action: {
@@ -27,7 +29,6 @@ struct MainView: View {
                         },
                         label: { self.articleRow(article) }
                     )
-//                    .buttonStyle(.plain)
                     .foregroundStyle(.primary)
                     .listRowSeparator(vm.articles.first == article ? .hidden : .visible, edges: .top)
                 }
@@ -49,7 +50,7 @@ struct MainView: View {
             .emptyDataViewModifier(onCondition: { vm.articles.isEmpty && !vm.isLoading })
         }
     }
-    @ViewBuilder
+    @ViewBuilder // ROW CELL
     func articleRow(_ article: ArticleModel) -> some View {
         HStack(alignment: .center) {
             // Content
@@ -103,9 +104,8 @@ struct MainView: View {
             }
         }
         .id(article.id)
-        //                .multilineTextAlignment(.leading)
     }
-    @ToolbarContentBuilder
+    @ToolbarContentBuilder // TOOLBAR
     func toolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .primaryAction) {
             Menu(String(localized: "options")) {
@@ -153,7 +153,7 @@ struct MainView: View {
             }
         }
     }
-    @ViewBuilder
+    @ViewBuilder // NO INTERNET BANNER
     var noInternetBanner: some View {
         HStack {
             Spacer()
@@ -167,18 +167,20 @@ struct MainView: View {
     }
 }
 
-#Preview {
-    MainView(vm: .init(articlesService: ArticlesMockService()))
-}
-
 struct ArticleDetailView: View {
     @State var article: ArticleModel
     
     var body: some View {
         ScrollView {
+            // TOP IMAGE VIEW
             ScrollView(.horizontal) {
                 ForEach(article.media, id: \.id) { media in
-                    if let imageURL = media.largeImageURL {
+                    if let imageData = media.largeImageData, let uiImage = UIImage(data: imageData) {
+                        Image(uiImage: uiImage)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .containerRelativeFrame(.horizontal, alignment: .center)
+                    } else if let imageURL = media.largeImageURL {
                         AsyncImage(
                             url: imageURL,
                             //                            transaction: nil,
@@ -199,7 +201,7 @@ struct ArticleDetailView: View {
             .scrollTargetBehavior(.paging)
             .scrollBounceBehavior(.basedOnSize)
             .scrollIndicators(.hidden)
-            // Head
+            // HEAD CONTENT
             HStack {
                 VStack(alignment: .leading, spacing: 10) {
                     Text(article.title)
@@ -222,7 +224,7 @@ struct ArticleDetailView: View {
                 .multilineTextAlignment(.leading)
                 Spacer()
             }
-            // Content
+            // REGULAR CONTENT
             HStack {
                 VStack(alignment: .leading) {
                     Text(article.abstract)
@@ -237,4 +239,13 @@ struct ArticleDetailView: View {
         }
         //        .ignoresSafeArea(edges: .top)
     }
+}
+
+#Preview {
+    ArticlesView(
+        vm: .init(
+            articlesService: ArticlesMockService(),
+            keychainManager: KeychainManagerMock()
+        )
+    )
 }

@@ -30,7 +30,7 @@ final class ArticleViewModelTest: XCTestCase {
         let mockService = ArticlesMockService()
         let keychainManager = KeychainManagerMock()
         let localFileManager = LocalFileManagerMock()
-        let vm = await MainViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
+        let vm = await ArticlesViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
         // When
         await vm.initData()
         // Then
@@ -44,9 +44,9 @@ final class ArticleViewModelTest: XCTestCase {
         let mockService = ArticlesMockService()
         let keychainManager = KeychainManagerMock()
         let localFileManager = LocalFileManagerMock()
-        let vm = await MainViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
+        let vm = await ArticlesViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
         // When
-        await vm.getAPIKeyFromKeychain()
+        try await vm.getAPIKeyFromKeychain()
         let apiKey = await vm.apiKeyFromKeychain
         // Then
         XCTAssertNotNil(apiKey)
@@ -57,7 +57,7 @@ final class ArticleViewModelTest: XCTestCase {
         let mockService = ArticlesMockService()
         let keychainManager = KeychainManagerMock()
         let localFileManager = LocalFileManagerMock()
-        let vm = await MainViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
+        let vm = await ArticlesViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
         // When
         await vm.getArticles()
         // Then
@@ -69,7 +69,7 @@ final class ArticleViewModelTest: XCTestCase {
         let mockService = ArticlesMockService()
         let keychainManager = KeychainManagerMock()
         let localFileManager = LocalFileManagerMock()
-        let vm = await MainViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
+        let vm = await ArticlesViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
         // When
         await vm.initData()
         await MainActor.run {
@@ -85,7 +85,7 @@ final class ArticleViewModelTest: XCTestCase {
         let mockService = ArticlesMockService()
         let keychainManager = KeychainManagerMock()
         let localFileManager = LocalFileManagerMock()
-        let vm = await MainViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
+        let vm = await ArticlesViewModel(articlesService: mockService, keychainManager: keychainManager, localFileManager: localFileManager)
         // When
         await vm.initData()
         await MainActor.run {

@@ -34,36 +34,7 @@ actor LocalFileManager: LocalFileManagerProtocol {
     }
     func deleteFileFromDocuments(withName name: String) async throws {
         let fileURL = await getDocumentsDirectory().appendingPathComponent("\(name).json")
+        guard FileManager.default.fileExists(atPath: fileURL.path()) else { return }
         try FileManager.default.removeItem(at: fileURL)
     }
-}
-
-struct CodableExample: Codable {
-    let name: String
-}
-
-actor LocalFileManagerMock: LocalFileManagerProtocol {
-    func getDocumentsDirectory() async -> URL {
-        return URL(string: "www.google.com")!
-    }
-    
-    nonisolated func saveOnDocuments(model: any Codable, withName name: String) async throws {
-        
-    }
-    
-    nonisolated func getModelFromDocuments<T: Codable>(withName name: String) async throws -> T {
-        guard
-            let url = Bundle.main.url(forResource: "sharedArticlesResponse", withExtension: "json")
-        else { throw NetworkError.decodingError }
-        let data = try Data(contentsOf: url)
-        let decoder = JSONDecoder()
-        let model = try decoder.decode(T.self, from: data)
-        return model
-    }
-    
-    func deleteFileFromDocuments(withName name: String) async throws {
-        
-    }
-    
-    
 }
